@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "Device": {
+      "title": "Device",
+      "description": "Represents a physical device.",
+      "type": "object",
+      "properties": {
+        "serialNumber": { "type": "string" },
+        "modelNumber": { "type": "string" },
+        "deviceType": { "type": "string", "enum": ["kwh-meter", "timer", "kwh-meter-timer"] },
+        "status": { "type": "string", "enum": ["available", "offline", "maintenance", "deactivated", "running", "error", "assigned", "manufactured", "unassigned"] },
+        "manufacturedDate": { "type": "string", "format": "date" },
+        "lastMaintenance": { "type": "string", "format": "date" },
+        "ownerId": { "type": "string" },
+        "deactivatedReason": { "type": "string" },
+        "maintenanceReason": { "type": "string" }
+      },
+      "required": ["serialNumber", "modelNumber", "deviceType", "status", "manufacturedDate", "lastMaintenance"]
+    },
+    "DeviceModel": {
+      "title": "Device Model",
+      "description": "Represents a model of a device.",
+      "type": "object",
+      "properties": {
+        "deviceModel": { "type": "string" },
+        "feature": { "type": "string", "enum": ["kwh-meter", "timer", "kwh-meter-timer"] }
+      },
+      "required": ["deviceModel", "feature"]
+    },
+    "DeviceOwner": {
+      "title": "Device Owner",
+      "description": "Represents the owner of a device.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "socialMediaUrl": { "type": "string", "format": "uri" },
+        "phoneNumber": { "type": "string" }
+      },
+      "required": ["name", "address", "email", "socialMediaUrl"]
+    },
+    "OwnedDevice": {
+      "title": "Owned Device",
+      "description": "Represents the relationship between an owner and a device.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "deviceId": { "type": "string" },
+        "activatedDate": { "type": "string", "format": "date" },
+        "chargePerKwh": { "type": "number" },
+        "chargePerMinute": { "type": "number" },
+        "assignmentType": { "type": "string", "enum": ["kwh-meter", "timer"] }
+      },
+      "required": ["ownerId", "deviceId", "activatedDate"]
+    },
+    "DeviceUser": {
+      "title": "Device User",
+      "description": "Represents a user of the device management system.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phoneNumber": { "type": "string" },
+        "socialMediaUrl": { "type": "string", "format": "uri" },
+        "photoUrl": { "type": "string", "format": "uri" }
+      },
+      "required": ["name", "email", "socialMediaUrl"]
+    }
+  },
+  "auth": {
+    "providers": []
+  },
+  "firestore": {
+    "/devices/{deviceId}": {
+      "schema": { "$ref": "#/entities/Device" },
+      "description": "Stores individual device information."
+    },
+    "/device-models/{modelId}": {
+      "schema": { "$ref": "#/entities/DeviceModel" },
+      "description": "Stores device model information."
+    },
+    "/device-owners/{ownerId}": {
+      "schema": { "$ref": "#/entities/DeviceOwner" },
+      "description": "Stores device owner information."
+    },
+    "/owners-devices/{assignmentId}": {
+      "schema": { "$ref": "#/entities/OwnedDevice" },
+      "description": "Stores the assignment of a device to an owner."
+    },
+    "/device-users/{userId}": {
+      "schema": { "$ref": "#/entities/DeviceUser" },
+      "description": "Stores device user information."
+    }
+  }
+}
